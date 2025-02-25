@@ -27,10 +27,51 @@ function saveUsers() {
     }
 }
 
-// Function to render users table
-function renderUsers() {
+// Search and filter functionality
+const searchInput = document.getElementById('searchInput');
+const filterCategory = document.getElementById('filterCategory');
+const ageFilterContainer = document.getElementById('ageFilterContainer');
+const ageFilter = document.getElementById('ageFilter');
+
+// Filter event listeners
+searchInput.addEventListener('input', filterUsers);
+filterCategory.addEventListener('change', handleCategoryChange);
+ageFilter.addEventListener('change', filterUsers);
+
+function handleCategoryChange() {
+    ageFilterContainer.style.display = filterCategory.value === 'age' ? 'block' : 'none';
+    filterUsers();
+}
+
+function filterUsers() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const category = filterCategory.value;
+    const ageRange = ageFilter.value;
+
+    const filteredUsers = users.filter(user => {
+        // Apply search filter
+        if (category === 'all') {
+            return Object.values(user).some(value => 
+                value.toString().toLowerCase().includes(searchTerm)
+            );
+        } else if (category === 'age' && ageRange !== 'all') {
+            // Apply age range filter
+            const age = parseInt(user.age);
+            const [min, max] = ageRange === '51+' ? [51, Infinity] : 
+                                ageRange.split('-').map(num => parseInt(num));
+            return age >= min && age <= max;
+        } else {
+            // Apply category-specific filter
+            return user[category].toString().toLowerCase().includes(searchTerm);
+        }
+    });
+
+    renderFilteredUsers(filteredUsers);
+}
+
+function renderFilteredUsers(filteredUsers) {
     userTableBody.innerHTML = '';
-    users.forEach((user, index) => {
+    filteredUsers.forEach((user, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${user.name}</td>

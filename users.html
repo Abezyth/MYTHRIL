@@ -22,6 +22,29 @@
         
         <div class="table-container">
             <h2>Registered Users</h2>
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search users...">
+                </div>
+                <div class="filter-box">
+                    <select id="filterCategory">
+                        <option value="all">All Categories</option>
+                        <option value="name">Name</option>
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                        <option value="age">Age</option>
+                    </select>
+                    <div id="ageFilterContainer" style="display: none;">
+                        <select id="ageFilter">
+                            <option value="all">All Ages</option>
+                            <option value="0-18">0-18</option>
+                            <option value="19-30">19-30</option>
+                            <option value="31-50">31-50</option>
+                            <option value="51+">51+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <table id="userTable">
                 <thead>
                     <tr>
