@@ -4,8 +4,18 @@ let editingIndex = -1;
 
 // DOM elements
 const userForm = document.getElementById('userForm');
-const userTableBody = document.getElementById('userTableBody');
 const submitButton = document.querySelector('#userForm button[type="submit"]');
+
+// Check for edit parameter in URL
+const urlParams = new URLSearchParams(window.location.search);
+const editParam = urlParams.get('edit');
+if (editParam !== null) {
+    const index = parseInt(editParam);
+    if (!isNaN(index)) {
+        loadUsers();
+        editUser(index);
+    }
+}
 
 // Function to load users from localStorage with error handling
 function loadUsers() {
@@ -41,34 +51,7 @@ function validateUser(user) {
     return true;
 }
 
-// Function to render users table
-function renderUsers() {
-    userTableBody.innerHTML = '';
-    users.forEach((user, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.phone}</td>
-            <td>${user.age}</td>
-            <td>
-                <button class="edit-btn" onclick="editUser(${index})">Edit</button>
-                <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
-            </td>
-        `;
-        userTableBody.appendChild(row);
-    });
-}
 
-// Function to delete user
-function deleteUser(index) {
-    if (confirm('Are you sure you want to delete this user?')) {
-        users.splice(index, 1);
-        if (saveUsers()) {
-            renderUsers();
-        }
-    }
-}
 
 // Function to edit user
 function editUser(index) {
@@ -119,10 +102,9 @@ userForm.addEventListener('submit', (e) => {
 
     // Save to localStorage
     if (saveUsers()) {
-        // Render updated table
-        renderUsers();
-        // Reset form
+        // Reset form and redirect to users page
         userForm.reset();
+        window.location.href = 'users.html';
     }
 });
 
