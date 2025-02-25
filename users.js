@@ -4,24 +4,30 @@ let users = [];
 // DOM elements
 const userTableBody = document.getElementById('userTableBody');
 
-// Function to load users from localStorage with error handling
-function loadUsers() {
+// Function to load users from JSON file
+async function loadUsers() {
     try {
-        const storedUsers = localStorage.getItem('users');
-        users = storedUsers ? JSON.parse(storedUsers) : [];
+        const response = await fetch('data.json');
+        users = await response.json();
     } catch (error) {
-        console.error('Error loading users from localStorage:', error);
+        console.error('Error loading users from JSON file:', error);
         users = [];
     }
 }
 
-// Function to save users to localStorage with error handling
-function saveUsers() {
+// Function to save users to JSON file
+async function saveUsers() {
     try {
-        localStorage.setItem('users', JSON.stringify(users));
-        return true;
+        const response = await fetch('data.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(users)
+        });
+        return response.ok;
     } catch (error) {
-        console.error('Error saving users to localStorage:', error);
+        console.error('Error saving users to JSON file:', error);
         alert('Error saving data. Please try again.');
         return false;
     }

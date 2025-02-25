@@ -1,4 +1,4 @@
-// Store users in localStorage with error handling
+// Store users in JSON file
 let users = [];
 let editingIndex = -1;
 
